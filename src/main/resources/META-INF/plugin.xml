@@ -2,13 +2,15 @@
 <idea-plugin>
     <id>com.github.golmschenk.intellijdisablepythondebugconsolebydefault</id>
     <name>Disable Python Debug Console by Default</name>
-    <vendor>golmschenk</vendor>
+    <vendor url="https://github.com/golmschenk">Greg Olmschenk</vendor>
     <description><![CDATA[
         <p>Hides the interactive Python debug console in the console tab of the debug tool window, so a debug session
         starts on the plain process output instead. This works around
         <a href="https://youtrack.jetbrains.com/issue/PY-61959">PY-61959</a>, where the
         <b>Settings | Build, Execution, Deployment | Console | Always show debug console</b> option has no effect.</p>
         <p>The debug console remains available through the <b>Show Debug Console</b> toggle of the console tab.</p>
+        <p>This plugin is pure vibecoded, AI slop. JetBrains will eventually fix the real issue, so I devoted almost
+        no actual effort to checking or verifying the code. Expect terrible code quality. Use at your own risk.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>

@@ -2,6 +2,8 @@
 
 # Disable Python Debug Console by Default Changelog
 
+## [Unreleased]
+
 ## [0.1.0]
 Added AI slop warning.
 
