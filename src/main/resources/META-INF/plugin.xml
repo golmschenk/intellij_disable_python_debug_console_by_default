@@ -1,19 +1,22 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.golmschenk.intellijdisablepythondebugconsolebydefault</id>
-    <name>intellij_disable_python_debug_console_by_default</name>
+    <name>Disable Python Debug Console by Default</name>
     <vendor>golmschenk</vendor>
     <description><![CDATA[
-        <p><b>intellij_disable_python_debug_console_by_default</b> is a repository that provides a pure template to make it easier to create a new plugin project.</p>
-        <p>The main goal of this template is to speed up the setup phase of plugin development for both new and experienced developers by preconfiguring the project scaffold and CI, linking to the proper documentation pages, and keeping everything organized.</p>
+        <p>Hides the interactive Python debug console in the console tab of the debug tool window, so a debug session
+        starts on the plain process output instead. This works around
+        <a href="https://youtrack.jetbrains.com/issue/PY-61959">PY-61959</a>, where the
+        <b>Settings | Build, Execution, Deployment | Console | Always show debug console</b> option has no effect.</p>
+        <p>The debug console remains available through the <b>Show Debug Console</b> toggle of the console tab.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.golmschenk.intellijdisablepythondebugconsolebydefault.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.golmschenk.intellijdisablepythondebugconsolebydefault.startup.MyProjectActivity" />
-    </extensions>
+    <projectListeners>
+        <listener
+            class="com.github.golmschenk.intellijdisablepythondebugconsolebydefault.listeners.DebugConsoleListener"
+            topic="com.intellij.xdebugger.XDebuggerManagerListener"/>
+    </projectListeners>
 </idea-plugin>

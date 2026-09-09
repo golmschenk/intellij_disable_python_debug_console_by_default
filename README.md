@@ -1,45 +1,35 @@
-# intellij_disable_python_debug_console_by_default
+# Disable Python Debug Console by Default
 
-![Build](https://github.com/golmschenk/intellij_disable_python_debug_console_by_default/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
+A plugin for JetBrains IDEs (PyCharm, IntelliJ IDEA) that counteracts [PY-61959](https://youtrack.jetbrains.com/issue/PY-61959/Always-shows-debug-console-option-is-not-disabled) by hiding the interactive Python debug console when a debug session starts.
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [group](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml), [name](./src/main/resources/META-INF/plugin.xml), and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin [description](./src/main/resources/META-INF/plugin.xml) (see [Tips][docs:plugin-description]) and this README to describe what your plugin does.
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
+## AI slop warning
 
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+This plugin is pure vibecoded, AI slop. JetBrains will eventually fix the real issue, so I devoted almost no actual
+effort to checking or verifying the code. Expect terrible code quality. Use at your own risk.
+
+## Features
+
+- Starts every debug session on the plain process output instead of the interactive Python debug console.
+- Works regardless of <kbd>Settings/Preferences</kbd> > <kbd>Build, Execution, Deployment</kbd> > <kbd>Console</kbd> > <kbd>Always show debug console</kbd>, which PyCharm currently ignores.
+- Leaves the debug console one click away through the <kbd>Show Debug Console</kbd> toggle of the console tab.
+
+## How it works
+
+The console tab of the debug tool window holds two consoles: the process output and the interactive Python debug
+console. While starting a session, PyCharm picks one of them twice. The second decision, in `PyDebugRunner`, tests the
+Swing `isEnabled()` flag of the console component (always `true`) instead of the *Always show debug console* setting, so
+the interactive console always wins.
+
+This plugin listens for started debug processes. Since a session is announced before its console is attached, and both
+the attaching and PyCharm's switches happen asynchronously, the plugin waits for the console and then re-asserts the
+process output for a moment, which keeps it behind every switch PyCharm still has queued. Afterwards it leaves the
+console alone, so switching to the debug console by hand keeps working.
 
 ## Installation
 
 - Using the IDE built-in plugin system:
-
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "intellij_disable_python_debug_console_by_default"</kbd> >
-  <kbd>Install</kbd>
-
-- Using JetBrains Marketplace:
-
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
-
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "Disable Python Debug Console by Default"</kbd> > <kbd>Install</kbd>
 
 - Manually:
-
-  Download the [latest release](https://github.com/golmschenk/intellij_disable_python_debug_console_by_default/releases/latest) and install it manually using
+  Download the latest release from GitHub and install it using:
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-
----
-Plugin based on the [IntelliJ Platform Plugin Template][template].
-
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
